@@ -16,8 +16,8 @@
 # In[1]:
 
 
-get_ipython().magic(u'load_ext watermark')
-get_ipython().magic(u"watermark -a 'Sebastian Raschka' -u -d -p numpy,pandas,matplotlib")
+#get_ipython().magic(u'load_ext watermark')
+#get_ipython().magic(u"watermark -a 'Sebastian Raschka' -u -d -p numpy,pandas,matplotlib")
 
 
 # *The use of `watermark` is optional. You can install this IPython extension via "`pip install watermark`". For more information, please see: https://github.com/rasbt/watermark.*
@@ -349,7 +349,7 @@ df.tail()
 # In[10]:
 
 
-get_ipython().magic(u'matplotlib inline')
+#get_ipython().magic(u'matplotlib inline')
 import matplotlib.pyplot as plt
 import numpy as np
 
