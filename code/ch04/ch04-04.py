@@ -9,10 +9,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.base import clone
 from sklearn.metrics import accuracy_score
 from itertools import combinations
 import matplotlib.pyplot as plt
+from sklearn.tree import export_graphviz
 
 # for sklearn 0.18's alternative syntax
 from distutils.version import LooseVersion as Version
@@ -62,8 +64,20 @@ feat_labels = df_wine.columns[1:]
 forest = RandomForestClassifier(n_estimators=10000,
                                 random_state=0,
                                 n_jobs=-1)
-
 forest.fit(X_train, y_train)
+# 適当な木を抜き出して可視化
+for i in range(5):
+    export_graphviz(forest.estimators_[i],
+                    out_file='forest{0}.dot'.format(i))
+
+# 決定木に置き換えることも（形式上）可能
+#tree = DecisionTreeClassifier(criterion='entropy', random_state=0)
+#tree.fit(X_train, y_train)
+#export_graphviz(tree,
+#                out_file='tree.dot')
+
+
+
 importances = forest.feature_importances_
 
 indices = np.argsort(importances)[::-1]
