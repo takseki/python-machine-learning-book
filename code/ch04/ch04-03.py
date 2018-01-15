@@ -69,7 +69,7 @@ class SBS():
         self.random_state = random_state
 
     def fit(self, X, y):
-
+        # 訓練用のデータを入力しているのだが、それをさらに分割して検証用サブセットを作る
         X_train, X_test, y_train, y_test = \
             train_test_split(X, y, test_size=self.test_size,
                              random_state=self.random_state)
@@ -81,22 +81,37 @@ class SBS():
                                  X_test, y_test, self.indices_)
         self.scores_ = [score]
 
+        #print(self.indices_)
+        #print(self.subsets_)
+        #print(self.scores_)
+        
         while dim > self.k_features:
             scores = []
             subsets = []
 
+            # 特徴量をいずれか1つ抜いたすべての場合について正解率を計算
             for p in combinations(self.indices_, r=dim - 1):
                 score = self._calc_score(X_train, y_train,
                                          X_test, y_test, p)
                 scores.append(score)
                 subsets.append(p)
+                #print(subsets)
+                #print(scores)
 
+
+            # 最良のものを採用
             best = np.argmax(scores)
             self.indices_ = subsets[best]
             self.subsets_.append(self.indices_)
             dim -= 1
 
             self.scores_.append(scores[best])
+
+            #print(self.indices_)
+            #print(self.subsets_)
+            #print(self.scores_)
+
+        # 最後に加えたスコア
         self.k_score_ = self.scores_[-1]
 
         return self
@@ -106,18 +121,23 @@ class SBS():
 
     def _calc_score(self, X_train, y_train, X_test, y_test, indices):
         self.estimator.fit(X_train[:, indices], y_train)
+        # スコアは検証用サブセットに対する正解率
         y_pred = self.estimator.predict(X_test[:, indices])
         score = self.scoring(y_test, y_pred)
         return score
 
-
+# 近傍数2のK近傍法
 knn = KNeighborsClassifier(n_neighbors=2)
 
 # selecting features
+# 特徴量1までSBSで計算しておく
+# 削減結果は特徴量13から1まで残っているので、後で好きなのを選べば良い
 sbs = SBS(knn, k_features=1)
 sbs.fit(X_train_std, y_train)
 
 # plotting performance of feature subsets
+# ここで表示されるのはSBS内部で検証用サブセットで計算したスコア
+# 本番用のテストデータのスコアとは異なる
 k_feat = [len(k) for k in sbs.subsets_]
 
 plt.plot(k_feat, sbs.scores_, marker='o')
@@ -129,7 +149,7 @@ plt.grid()
 # plt.savefig('./sbs.png', dpi=300)
 plt.show()
 
-
+# SBSの結果を使って特徴量5個に削減
 k5 = list(sbs.subsets_[8])
 print('Selected top 5 features:\n', df_wine.columns[1:][k5])
 
