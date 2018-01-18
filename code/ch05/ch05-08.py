@@ -84,9 +84,10 @@ def rbf_kernel_pca(X, gamma, n_components):
 
 X, y = make_moons(n_samples=100, random_state=123)
 
+plt.figure(1)
 plt.scatter(X[y == 0, 0], X[y == 0, 1], color='red', marker='^', alpha=0.5)
 plt.scatter(X[y == 1, 0], X[y == 1, 1], color='blue', marker='o', alpha=0.5)
-plt.show()
+#plt.show()
 
 alphas, lambdas = rbf_kernel_pca(X, gamma=15, n_components=1)
 
@@ -137,6 +138,7 @@ print('Reprojection x_reproj:', x_reproj)
 # これも規格化直すならこっち
 alphas2 = np.sqrt(lambdas[0]) * alphas
 
+plt.figure(2)
 plt.scatter(alphas2[y == 0, 0], np.zeros((50)),
             color='red', marker='^', alpha=0.5)
 plt.scatter(alphas2[y == 1, 0], np.zeros((50)),
