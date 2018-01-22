@@ -35,8 +35,8 @@ else:
 # 平均
 mu = np.array([0, 0])
 # 共分散
-cov_d = np.array([[8, 0],
-                  [0, 1]])
+cov_d = np.array([[80, 0],
+                  [0, 10]])
 c = cos(pi/3)
 s = sin(pi/3)
 R = np.array([[c, -s],
