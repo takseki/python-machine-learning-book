@@ -41,16 +41,18 @@ def rbf_kernel_pca(X, gamma, n_components):
     # Obtaining eigenpairs from the centered kernel matrix
     # numpy.eigh returns them in sorted order
     eigvals, eigvecs = eigh(K)
-
+    print(np.sqrt(eigvals[-1]))
+    print(np.sqrt(eigvals[-2]))
+    
     # Collect the top k eigenvectors (projected samples)
-    X_pc = np.column_stack((eigvecs[:, -i]
-                            for i in range(1, n_components + 1)))
+    #X_pc = np.column_stack((eigvecs[:, -i]
+    #                        for i in range(1, n_components + 1)))
 
     # scikit-learnの結果と比べてみても, たぶんこれが正しい気がする
     # ただ結局各成分にスケール因子が入るだけなので、
     # 学習という意味ではどちらでも良いのかもしれない
-    #X_pc = np.column_stack((np.sqrt(eigvals[-i]) * eigvecs[:, -i]
-    #                        for i in range(1, n_components + 1)))
+    X_pc = np.column_stack((np.sqrt(eigvals[-i]) * eigvecs[:, -i]
+                            for i in range(1, n_components + 1)))
 
     # PCA固有ベクトルvをデータサンプルに直すには X v とする必要がある
     # ここで正規化された特異ベクトルの間の関係を使う。
@@ -106,7 +108,7 @@ def rbf_kernel_pca2(X, gamma, n_components):
     # Obtaining eigenpairs from the centered kernel matrix
     # numpy.eigh returns them in sorted order
     eigvals, eigvecs = eigh(K)
-
+    
     # Collect the top k eigenvectors (projected samples)
     alphas = np.column_stack((eigvecs[:, -i]
                               for i in range(1, n_components + 1)))
@@ -161,8 +163,9 @@ def linear_kernel_pca(X, n_components):
     # Obtaining eigenpairs from the centered kernel matrix
     # numpy.eigh returns them in sorted order
     eigvals, eigvecs = eigh(K)
-    # print(eigvecs)
-
+    print(np.sqrt(eigvals[-1]))
+    print(np.sqrt(eigvals[-2]))
+    
     # Collect the top k eigenvectors (projected samples)
     #X_pc = np.column_stack((eigvecs[:, -i]
     #                        for i in range(1, n_components + 1)))

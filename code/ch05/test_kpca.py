@@ -56,18 +56,20 @@ plt.scatter(X[:,0], X[:,1], color='r', marker='x')
 
 # scikit-learn の KernelPCA で確認してみる
 # 自前実装版と比べると、値のスケールが違う
+# 線形カーネル
 scikit_kpca = KernelPCA(n_components=2, kernel='linear')
-
-# ガウスカーネルだとイマイチ結果の意味がわからないため線形カーネル使う
-g = 100
+# ガウスカーネル
+#g = 1
 #scikit_kpca = KernelPCA(n_components=2, kernel='rbf', gamma=g)
 
 X_skernpca = scikit_kpca.fit_transform(X)
 
-
 # 自前実装版
 X_kpca = linear_kernel_pca(X, 2)
 #X_kpca = rbf_kernel_pca(X, g, 2)
+
+# 比を見てみる
+print(X_skernpca / X_kpca)
 
 plt.figure(2)
 plt.axis('equal')
