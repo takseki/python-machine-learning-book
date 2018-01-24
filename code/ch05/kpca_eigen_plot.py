@@ -26,11 +26,19 @@ else:
     from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
 #############################################################################
+# 計算する主成分の数
+nc = 3
+
+# 半月 or 円
 X, y = make_moons(n_samples=100, random_state=123)
+#X, y = make_circles(n_samples=100, random_state=123, noise=0.01, factor=0.3)
 
-scikit_kpca = KernelPCA(n_components=2, kernel='rbf', gamma=15)
+# 半月はガウスカーネルの第1主成分で分離できる
+scikit_kpca = KernelPCA(n_components=nc, kernel='rbf', gamma=15)
+# 円は2次多項式カーネルで分離できるが、分離可能な空間が第3主成分になる
+#scikit_kpca = KernelPCA(n_components=nc, kernel='poly', degree=2, coef0=0)
+
 X_kpca = scikit_kpca.fit_transform(X)
-
 
 # PRML 12章にあるような元の空間での基底関数のプロットをしてみる
 x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -48,8 +56,8 @@ z = scikit_kpca.transform(mesh)
 colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
 cmap = ListedColormap(colors[:len(np.unique(y))])
 
-# 上位2成分を元空間上に等高線図でプロット
-for i in range(2):
+# 上位成分を元空間上に等高線図でプロット
+for i in range(nc):
     plt.figure(i)
     plt.scatter(X[y == 0, 0], X[y == 0, 1], color='red', marker='^', alpha=0.5)
     plt.scatter(X[y == 1, 0], X[y == 1, 1], color='blue', marker='o', alpha=0.5)
@@ -58,10 +66,12 @@ for i in range(2):
     plt.xlim(xx1.min(), xx1.max())
     plt.ylim(xx2.min(), xx2.max())
 
-plt.figure(2)
-plt.scatter(X_kpca[y == 0, 0], X_kpca[y == 0, 1],
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure(nc)
+ax = Axes3D(fig)
+ax.scatter(X_kpca[y == 0, 0], X_kpca[y == 0, 1], X_kpca[y == 0, 2],
             color='red', marker='^', alpha=0.5)
-plt.scatter(X_kpca[y == 1, 0], X_kpca[y == 1, 1], 
+ax.scatter(X_kpca[y == 1, 0], X_kpca[y == 1, 1], X_kpca[y == 1, 2], 
             color='blue', marker='o', alpha=0.5)
 
 plt.show()
