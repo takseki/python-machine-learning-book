@@ -105,4 +105,10 @@ for i in range(2):
     plt.xlim(xx1.min(), xx1.max())
     plt.ylim(xx2.min(), xx2.max())
 
+plt.figure(2)
+plt.scatter(alphas[y == 0, 0], alphas[y == 0, 1], 
+            color='red', marker='^', alpha=0.5)
+plt.scatter(alphas[y == 1, 0], alphas[y == 1, 1], 
+            color='blue', marker='o', alpha=0.5)
+
 plt.show()
